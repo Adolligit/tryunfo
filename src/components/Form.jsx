@@ -20,7 +20,7 @@ class Form extends React.Component {
 					<input data-testid="attr3-input" type="number" name="thirdAttribute" />
 				</label>
 				<label> Imagem : 
-					<input data-testid="image-input" type="text" name="name" />
+					{/* <input data-testid="image-input" type="text" name="name" /> */}
 				</label>
 				<label>Raridade
 					<select data-testid="rare-input" name="raridade">
