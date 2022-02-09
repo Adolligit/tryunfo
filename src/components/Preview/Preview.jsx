@@ -1,28 +1,21 @@
 import React from 'react';
-import Form from './Form';
-import Card from './Card';
+import Form from '../Form';
+import Card from '../Card';
+import STATE_INITIAL from './STATE_INITIAL';
 
 class Preview extends React.Component {
   constructor() {
     super();
-    this.state = {
-      payload: {
-        cardName: '',
-        cardDescription: '',
-        cardAttr1: 0,
-        cardAttr2: 0,
-        cardAttr3: 0,
-        cardImage: '',
-        cardRare: 'normal',
-        cardTrunfo: true,
-        hasTrunfo: '',
-        isSaveButtonDisabled: true,
-      },
-    };
+    this.state = STATE_INITIAL;
 
     this.changeState = this.changeState.bind(this);
     this.buttonSaveValidation = this.buttonSaveValidation.bind(this);
+    this.saveData = this.saveData.bind(this);
+
+    console.log(STATE_INITIAL);
   }
+
+  crutch = () => this.setState({ ...STATE_INITIAL });
 
   changeState({ target }) {
     const { name, value } = target;
@@ -64,11 +57,10 @@ class Preview extends React.Component {
       cardAttr2,
       cardAttr3].every((number) => number >= 0 && number <= max);
 
-    const twoHundredAndTen = (Number(cardAttr1)
+    const twoHundredAndTen = (
+      Number(cardAttr1)
       + Number(cardAttr2)
       + Number(cardAttr3)) <= sumMax;
-
-    console.log(twoHundredAndTen);
 
     return this.setState({
       payload: {
@@ -78,13 +70,28 @@ class Preview extends React.Component {
     });
   }
 
+  saveData() {
+    const { payload, savedCards } = this.state;
+
+    this.setState({
+      savedCards: [...savedCards, { ...payload }],
+    }, () => this.crutch());
+  }
+
   render() {
     const { payload } = this.state;
 
     return (
       <>
-        <Form { ...payload } onInputChange={ this.changeState } />
-        <Card { ...payload } onInputChange={ this.changeState } />
+        <Form
+          { ...payload }
+          onInputChange={ this.changeState }
+          onSaveButtonClick={ this.saveData }
+        />
+        <Card
+          { ...payload }
+          onInputChange={ this.changeState }
+        />
       </>
     );
   }

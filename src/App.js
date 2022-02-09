@@ -1,5 +1,5 @@
 import React from 'react';
-import Preview from './components/Preview';
+import Preview from './components/Preview/Preview';
 
 class App extends React.Component {
   render() {
