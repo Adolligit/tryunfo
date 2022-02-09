@@ -22,7 +22,6 @@ class Preview extends React.Component {
 
     this.changeState = this.changeState.bind(this);
     this.buttonSaveValidation = this.buttonSaveValidation.bind(this);
-    this.horrivelUmEspanto = this.horrivelUmEspanto.bind(this);
   }
 
   changeState({ target }) {
@@ -34,12 +33,13 @@ class Preview extends React.Component {
         ...payload,
         [name]: value,
       },
-    });
+    }, this.buttonSaveValidation); // Luanderson passou aqui.
   }
 
   buttonSaveValidation() {
     const { payload } = this.state;
-    const eslixo = 90;
+    const max = 90;
+    const sumMax = 210;
 
     const {
       payload: {
@@ -62,23 +62,20 @@ class Preview extends React.Component {
     const conditionAttibutes = [
       cardAttr1,
       cardAttr2,
-      cardAttr3].every((number) => number >= 0 && number < eslixo);
+      cardAttr3].every((number) => number >= 0 && number <= max);
 
-    this.setState({
-      payload: { ...payload, isSaveButtonDisabled: !(emptyField && conditionAttibutes) },
+    const twoHundredAndTen = (Number(cardAttr1)
+      + Number(cardAttr2)
+      + Number(cardAttr3)) <= sumMax;
+
+    console.log(twoHundredAndTen);
+
+    return this.setState({
+      payload: {
+        ...payload,
+        isSaveButtonDisabled: !(emptyField && conditionAttibutes && twoHundredAndTen),
+      },
     });
-  }
-
-  horrivelUmEspanto(event) {
-    /*
-      React demora para fazer a atualização do estado, por isso tive que esperar o estado atualizar para depois executar a função buttonSaveValidation() dentro do setTimeout.
-
-      É ridículo esse código, não tem nexo. Assim que eu chamo a função changeState, já deveria atualizar o estado e depois eu poderia usar o estado atualizado no buttonSaveValidation ( estou desestruturando lá dentro o "payload" ).
-
-      Se a atualização do estado no React é assíncrona (ou pode ser), então poderíamos usar o .then() para lidar com isso. Utilizar o setTimeout só porque o React não atulizou o estado a tempo, só me faz lembrar da frase da Paola Carosella "É horrível isso. Horrível, horrível, horrível, horrível, horroroso, horrível, um espanto, me faz mal"
-    */
-    this.changeState(event);
-    setTimeout(() => this.buttonSaveValidation(), 0);
   }
 
   render() {
@@ -86,8 +83,8 @@ class Preview extends React.Component {
 
     return (
       <>
-        <Form { ...payload } onInputChange={ this.horrivelUmEspanto } />
-        <Card { ...payload } onInputChange={ this.horrivelUmEspanto } />
+        <Form { ...payload } onInputChange={ this.changeState } />
+        <Card { ...payload } onInputChange={ this.changeState } />
       </>
     );
   }
