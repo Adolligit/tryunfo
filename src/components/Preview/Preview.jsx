@@ -10,9 +10,7 @@ class Preview extends React.Component {
 
     this.changeState = this.changeState.bind(this);
     this.buttonSaveValidation = this.buttonSaveValidation.bind(this);
-    this.saveData = this.saveData.bind(this);
-
-    console.log(STATE_INITIAL);
+    this.saveCard = this.saveCard.bind(this);
   }
 
   changeState({ target }) {
@@ -68,8 +66,10 @@ class Preview extends React.Component {
     });
   }
 
-  saveData() {
+  saveCard() {
     const { payload, savedCards } = this.state;
+
+    if (payload.cardTrunfo) payload.hasTrunfo = true;
 
     this.setState({
       savedCards: [...savedCards, { ...payload }],
@@ -78,14 +78,14 @@ class Preview extends React.Component {
   }
 
   render() {
-    const { payload } = this.state;
-
+    const { payload, savedCards } = this.state;
     return (
       <>
         <Form
           { ...payload }
           onInputChange={ this.changeState }
-          onSaveButtonClick={ this.saveData }
+          onSaveButtonClick={ this.saveCard }
+          savedCards={ savedCards }
         />
         <Card
           { ...payload }
