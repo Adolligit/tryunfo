@@ -15,8 +15,6 @@ class Preview extends React.Component {
     console.log(STATE_INITIAL);
   }
 
-  crutch = () => this.setState({ ...STATE_INITIAL });
-
   changeState({ target }) {
     const { name, value } = target;
     const { payload } = this.state;
@@ -75,7 +73,8 @@ class Preview extends React.Component {
 
     this.setState({
       savedCards: [...savedCards, { ...payload }],
-    }, () => this.crutch());
+    });
+    this.setState({ payload: STATE_INITIAL.payload });
   }
 
   render() {
