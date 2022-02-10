@@ -11,11 +11,15 @@ class Preview extends React.Component {
     this.changeState = this.changeState.bind(this);
     this.buttonSaveValidation = this.buttonSaveValidation.bind(this);
     this.saveCard = this.saveCard.bind(this);
+    this.alreadyHas = this.alreadyHas.bind(this);
   }
 
   changeState({ target }) {
-    const { name, value } = target;
+    const { name, type } = target;
     const { payload } = this.state;
+    let { value } = target;
+
+    if (value && type === 'checkbox') value = true; // fixing error at the component Card
 
     this.setState({
       payload: {
@@ -66,26 +70,29 @@ class Preview extends React.Component {
     });
   }
 
+  alreadyHas() {
+    const { savedCards } = this.state;
+
+    this.setState({ hasTrunfo: savedCards.some((card) => card.cardTrunfo) });
+  }
+
   saveCard() {
     const { payload, savedCards } = this.state;
 
-    if (payload.cardTrunfo) payload.hasTrunfo = true;
-
-    this.setState({
-      savedCards: [...savedCards, { ...payload }],
-    });
-    this.setState({ payload: STATE_INITIAL.payload });
+    this.setState({ savedCards: [...savedCards, { ...payload }] });
+    this.setState({ payload: STATE_INITIAL.payload }, this.alreadyHas);
   }
 
   render() {
-    const { payload, savedCards } = this.state;
+    const { payload, hasTrunfo } = this.state;
+
     return (
       <>
         <Form
           { ...payload }
           onInputChange={ this.changeState }
           onSaveButtonClick={ this.saveCard }
-          savedCards={ savedCards }
+          hasTrunfo={ hasTrunfo }
         />
         <Card
           { ...payload }

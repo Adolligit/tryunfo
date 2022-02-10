@@ -12,25 +12,11 @@ class Form extends React.Component {
       cardImage,
       cardRare,
       cardTrunfo,
+      hasTrunfo,
       isSaveButtonDisabled,
       onInputChange,
       onSaveButtonClick,
-      savedCards,
     } = this.props;
-
-    const superTrunfo = () => {
-      const trunfo = savedCards.some((card) => card.hasTrunfo);
-
-      if (trunfo) return 'Você já tem um Super Trunfo em seu baralho';
-      return (
-        <input
-          data-testid="trunfo-input"
-          type="checkbox"
-          name="cardTrunfo"
-          checked={ cardTrunfo }
-          onChange={ onInputChange }
-        />);
-    };
 
     return (
       <form action="">
@@ -114,7 +100,15 @@ class Form extends React.Component {
         </label>
         <label htmlFor="super trunfo">
           {' Super Trunfo :'}
-          { superTrunfo() }
+          {/* usando terminado porque não funciona IF */}
+          {(hasTrunfo) ? 'Você já tem um Super Trunfo em seu baralho' : <input
+            data-testid="trunfo-input"
+            type="checkbox"
+            name="cardTrunfo"
+            checked={ cardTrunfo }
+            onChange={ onInputChange }
+            disabled={ hasTrunfo }
+          />}
         </label>
         <input
           data-testid="save-button"
