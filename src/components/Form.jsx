@@ -100,7 +100,7 @@ class Form extends React.Component {
         </label>
         <label htmlFor="super trunfo">
           {' Super Trunfo :'}
-          {/* usando terminado porque não funciona IF */}
+          {/* usando condição ternária porque não funciona IF */}
           {(hasTrunfo) ? 'Você já tem um Super Trunfo em seu baralho' : <input
             data-testid="trunfo-input"
             type="checkbox"

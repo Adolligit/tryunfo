@@ -1,12 +1,13 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import Form from '../Form';
 import Card from '../Card';
-import STATE_INITIAL from './STATE_INITIAL';
+import STATE from './STATE';
 
 class Preview extends React.Component {
   constructor() {
     super();
-    this.state = STATE_INITIAL;
+    this.state = STATE;
 
     this.changeState = this.changeState.bind(this);
     this.buttonSaveValidation = this.buttonSaveValidation.bind(this);
@@ -78,9 +79,12 @@ class Preview extends React.Component {
 
   saveCard() {
     const { payload, savedCards } = this.state;
+    const { getState } = this.props;
 
-    this.setState({ savedCards: [...savedCards, { ...payload }] });
-    this.setState({ payload: STATE_INITIAL.payload }, this.alreadyHas);
+    this.setState({ savedCards: [...savedCards, { ...payload }] },
+      () => getState(payload));
+    this.setState({ payload: STATE.payload },
+      this.alreadyHas);
   }
 
   render() {
@@ -102,5 +106,7 @@ class Preview extends React.Component {
     );
   }
 }
+
+Preview.propTypes = { getState: PropTypes.func }.isRequired;
 
 export default Preview;

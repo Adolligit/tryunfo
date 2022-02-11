@@ -1,4 +1,4 @@
-const STATE_INITIAL = {
+const STATE = {
   payload: {
     cardName: '',
     cardDescription: '',
@@ -14,4 +14,4 @@ const STATE_INITIAL = {
   savedCards: [],
 };
 
-export default STATE_INITIAL;
+export default STATE;
