@@ -12,6 +12,7 @@ const STATE = {
   },
   hasTrunfo: false,
   savedCards: [],
+  filteredCards: [],
 };
 
 export default STATE;

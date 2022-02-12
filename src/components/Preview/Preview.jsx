@@ -14,6 +14,7 @@ class Preview extends React.Component {
     this.saveCard = this.saveCard.bind(this);
     this.alreadyHas = this.alreadyHas.bind(this);
     this.deleteCard = this.deleteCard.bind(this);
+    this.filterCard = this.filterCard.bind(this);
   }
 
   changeState({ target }) {
@@ -78,26 +79,41 @@ class Preview extends React.Component {
     this.setState({ hasTrunfo: savedCards.some((card) => card.cardTrunfo) });
   }
 
+  filterCard({ target: { value } }) {
+    const { savedCards } = this.state;
+    const filtered = savedCards.filter((card) => (
+      card.cardName.toLowerCase().includes(value.toLowerCase())
+    ));
+
+    // console.log(filtered);
+
+    this.setState({
+      filteredCards: filtered,
+    });
+  }
+
   saveCard() {
     const { payload, savedCards } = this.state;
-    const { getStateChild } = this.props;
+    const cardsDeck = [...savedCards, { ...payload }];
 
-    this.setState({ savedCards: [...savedCards, { ...payload }] },
-      () => getStateChild(payload));
+    this.setState({
+      savedCards: cardsDeck,
+      filteredCards: cardsDeck,
+    });
     this.setState({ payload: STATE.payload },
       this.alreadyHas);
   }
 
-  deleteCard(name) {
+  deleteCard(nameCard) {
     const { savedCards } = this.state;
 
     this.setState({
-      savedCards: savedCards.filter((card) => card.cardName !== name),
+      savedCards: savedCards.filter((card) => card.cardName !== nameCard),
     }, this.alreadyHas);
   }
 
   render() {
-    const { payload, savedCards, hasTrunfo } = this.state;
+    const { payload, filteredCards, hasTrunfo } = this.state;
 
     return (
       <>
@@ -113,7 +129,18 @@ class Preview extends React.Component {
           onInputChange={ this.changeState }
         />
         <h2>Deck</h2>
-        { savedCards.map((card) => (
+        <fieldset>
+          <h3>Filtrar</h3>
+          <label htmlFor="Filtrar">
+            Nome:
+            <input
+              data-testid="name-filter"
+              type="text"
+              onChange={ this.filterCard }
+            />
+          </label>
+        </fieldset>
+        { filteredCards.map((card) => (
           <div key={ card.cardName }>
             <Card { ...card } />
             <input
