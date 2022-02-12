@@ -85,8 +85,6 @@ class Preview extends React.Component {
       card.cardName.toLowerCase().includes(value.toLowerCase())
     ));
 
-    // console.log(filtered);
-
     this.setState({
       filteredCards: filtered,
     });
@@ -106,9 +104,11 @@ class Preview extends React.Component {
 
   deleteCard(nameCard) {
     const { savedCards } = this.state;
+    const filter = savedCards.filter((card) => card.cardName !== nameCard);
 
     this.setState({
-      savedCards: savedCards.filter((card) => card.cardName !== nameCard),
+      savedCards: filter,
+      filteredCards: filter,
     }, this.alreadyHas);
   }
 
