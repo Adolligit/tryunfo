@@ -13,6 +13,7 @@ class Preview extends React.Component {
     this.buttonSaveValidation = this.buttonSaveValidation.bind(this);
     this.saveCard = this.saveCard.bind(this);
     this.alreadyHas = this.alreadyHas.bind(this);
+    this.deleteCard = this.deleteCard.bind(this);
   }
 
   changeState({ target }) {
@@ -79,16 +80,24 @@ class Preview extends React.Component {
 
   saveCard() {
     const { payload, savedCards } = this.state;
-    const { getState } = this.props;
+    const { getStateChild } = this.props;
 
     this.setState({ savedCards: [...savedCards, { ...payload }] },
-      () => getState(payload));
+      () => getStateChild(payload));
     this.setState({ payload: STATE.payload },
       this.alreadyHas);
   }
 
+  deleteCard(name) {
+    const { savedCards } = this.state;
+
+    this.setState({
+      savedCards: savedCards.filter((card) => card.cardName !== name),
+    }, this.alreadyHas);
+  }
+
   render() {
-    const { payload, hasTrunfo } = this.state;
+    const { payload, savedCards, hasTrunfo } = this.state;
 
     return (
       <>
@@ -98,15 +107,28 @@ class Preview extends React.Component {
           onSaveButtonClick={ this.saveCard }
           hasTrunfo={ hasTrunfo }
         />
+        <h2>Preview</h2>
         <Card
           { ...payload }
           onInputChange={ this.changeState }
         />
+        <h2>Deck</h2>
+        { savedCards.map((card) => (
+          <div key={ card.cardName }>
+            <Card { ...card } />
+            <input
+              data-testid="delete-button"
+              type="button"
+              value="Deletar"
+              onClick={ () => this.deleteCard(card.cardName) }
+            />
+            <hr />
+          </div>))}
       </>
     );
   }
 }
 
-Preview.propTypes = { getState: PropTypes.func }.isRequired;
+Preview.propTypes = { getStateChild: PropTypes.func }.isRequired;
 
 export default Preview;
