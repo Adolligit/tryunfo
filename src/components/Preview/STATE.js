@@ -10,9 +10,16 @@ const STATE = {
     cardTrunfo: false,
     isSaveButtonDisabled: true,
   },
+  // crie funções separadas para cada filtro ao invés de estados separados.
+  filteredCards: [],
+  cardsFilters: {
+    filterByName: [],
+    filterByRarity: [],
+    filterByTrunfo: [],
+    filterResult: [],
+  },
   hasTrunfo: false,
   savedCards: [],
-  filteredCards: [],
 };
 
 export default STATE;

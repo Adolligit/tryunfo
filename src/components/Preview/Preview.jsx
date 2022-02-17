@@ -12,9 +12,10 @@ class Preview extends React.Component {
     this.changeState = this.changeState.bind(this);
     this.buttonSaveValidation = this.buttonSaveValidation.bind(this);
     this.saveCard = this.saveCard.bind(this);
-    this.alreadyHas = this.alreadyHas.bind(this);
+    this.alreadyHasTrunfo = this.alreadyHasTrunfo.bind(this);
     this.deleteCard = this.deleteCard.bind(this);
-    this.filterCard = this.filterCard.bind(this);
+    this.filterRarity = this.filterRarity.bind(this);
+    this.filterName = this.filterName.bind(this);
   }
 
   changeState({ target }) {
@@ -73,43 +74,59 @@ class Preview extends React.Component {
     });
   }
 
-  alreadyHas() {
+  alreadyHasTrunfo() {
     const { savedCards } = this.state;
 
     this.setState({ hasTrunfo: savedCards.some((card) => card.cardTrunfo) });
   }
 
-  filterCard({ target: { value } }) {
+  filterName({ target: { value } }) {
     const { savedCards } = this.state;
-    const filtered = savedCards.filter((card) => (
-      card.cardName.toLowerCase().includes(value.toLowerCase())
-    ));
+    const filteredNames = savedCards.filter((card) => card.cardName.includes(value));
+    const toFilteredCards = (value) ? filteredNames : savedCards;
 
     this.setState({
-      filteredCards: filtered,
+      filteredCards: toFilteredCards,
     });
+  }
+
+  filterRarity({ target: { value } }) {
+    if (value !== 'todas') {
+      const { savedCards } = this.state;
+      const filteredNames = savedCards.filter((card) => card.cardRare === value);
+      const toFilteredCards = (value) ? filteredNames : savedCards;
+
+      this.setState({
+        filteredCards: toFilteredCards,
+      });
+    }
   }
 
   saveCard() {
     const { payload, savedCards } = this.state;
     const cardsDeck = [...savedCards, { ...payload }];
 
+    /*
+      É interessante apagar os campos para filtar o nome e a raridade,
+      pois quando salvar uma novar carta, uma nova pesquisa deve ser feita,
+      já que toda a lista do filter é alterada também.
+    */
     this.setState({
       savedCards: cardsDeck,
       filteredCards: cardsDeck,
     });
     this.setState({ payload: STATE.payload },
-      this.alreadyHas);
+      this.alreadyHasTrunfo);
   }
 
   deleteCard(nameCard) {
     const { savedCards } = this.state;
-    const filter = savedCards.filter((card) => card.cardName !== nameCard);
+    const willBeDeleted = savedCards.filter((card) => card.cardName !== nameCard);
 
     this.setState({
-      savedCards: filter,
-      filteredCards: filter,
-    }, this.alreadyHas);
+      savedCards: willBeDeleted,
+      filteredCards: willBeDeleted,
+    }, this.alreadyHasTrunfo);
   }
 
   render() {
@@ -136,8 +153,20 @@ class Preview extends React.Component {
             <input
               data-testid="name-filter"
               type="text"
-              onChange={ this.filterCard }
+              onChange={ this.filterName }
             />
+          </label>
+          <label htmlFor="Filtrar">
+            Raridade:
+            <select
+              data-testid="rare-filter"
+              onChange={ this.filterRarity }
+            >
+              <option value="todas">todas</option>
+              <option value="normal">normal</option>
+              <option value="raro">raro</option>
+              <option value="muito raro">muito raro</option>
+            </select>
           </label>
         </fieldset>
         { filteredCards.map((card) => (
