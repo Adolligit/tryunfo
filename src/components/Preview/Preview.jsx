@@ -103,10 +103,10 @@ class Preview extends React.Component {
     }
   }
 
-  filterTrunfo({ target: { value } }) {
+  filterTrunfo({ target: { checked } }) {
     const { savedCards } = this.state;
     const filteredNames = savedCards.filter((card) => card.cardTrunfo);
-    const toFilteredCards = (value) ? filteredNames : savedCards;
+    const toFilteredCards = (checked) ? filteredNames : savedCards;
 
     this.setState({
       filteredCards: toFilteredCards,
