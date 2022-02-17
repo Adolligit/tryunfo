@@ -16,6 +16,7 @@ class Preview extends React.Component {
     this.deleteCard = this.deleteCard.bind(this);
     this.filterRarity = this.filterRarity.bind(this);
     this.filterName = this.filterName.bind(this);
+    this.filterTrunfo = this.filterTrunfo.bind(this);
   }
 
   changeState({ target }) {
@@ -102,30 +103,36 @@ class Preview extends React.Component {
     }
   }
 
+  filterTrunfo({ target: { value } }) {
+    const { savedCards } = this.state;
+    const filteredNames = savedCards.filter((card) => card.cardTrunfo);
+    const toFilteredCards = (value) ? filteredNames : savedCards;
+
+    this.setState({
+      filteredCards: toFilteredCards,
+    });
+  }
+
   saveCard() {
     const { payload, savedCards } = this.state;
     const cardsDeck = [...savedCards, { ...payload }];
 
-    /*
-      É interessante apagar os campos para filtar o nome e a raridade,
-      pois quando salvar uma novar carta, uma nova pesquisa deve ser feita,
-      já que toda a lista do filter é alterada também.
-    */
     this.setState({
       savedCards: cardsDeck,
       filteredCards: cardsDeck,
     });
+
     this.setState({ payload: STATE.payload },
       this.alreadyHasTrunfo);
   }
 
   deleteCard(nameCard) {
     const { savedCards } = this.state;
-    const willBeDeleted = savedCards.filter((card) => card.cardName !== nameCard);
+    const CardwillBeDeleted = savedCards.filter((card) => card.cardName !== nameCard);
 
     this.setState({
-      savedCards: willBeDeleted,
-      filteredCards: willBeDeleted,
+      savedCards: CardwillBeDeleted,
+      filteredCards: CardwillBeDeleted,
     }, this.alreadyHasTrunfo);
   }
 
@@ -167,6 +174,15 @@ class Preview extends React.Component {
               <option value="raro">raro</option>
               <option value="muito raro">muito raro</option>
             </select>
+          </label>
+          <label htmlFor="Trunfo">
+            Trunfo:
+            <input
+              data-testid="trunfo-filter"
+              type="checkbox"
+              name="cardTrunfo"
+              onChange={ this.filterTrunfo }
+            />
           </label>
         </fieldset>
         { filteredCards.map((card) => (
